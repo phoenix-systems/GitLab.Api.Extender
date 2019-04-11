@@ -5,7 +5,7 @@ namespace GitLab.Api.Extender.Models
     public class GetProjectIdRequest
     {
         /// <summary>
-        /// The url to gitlab repo. Must start with http:// or https:// and end with .git. Like: http://example.com/app/app-client.git
+        /// The url to gitlab repo. Must start with http:// or https://. Like: http://example.com/app/app-client.git
         /// </summary>
         public string HttpUrlToRepo { get; set; }
     }
@@ -16,15 +16,14 @@ namespace GitLab.Api.Extender.Models
         {
             RuleFor(p => p.HttpUrlToRepo)
                 .NotEmpty()
-                .Must(f => f.ToLower().StartsWith("http://") || f.ToLower().StartsWith("https://")).WithMessage("Must start with http:// or https://")
-                .Must(f => f.ToLower().EndsWith(".git")).WithMessage("Must end with .git");
+                .Must(f => f.ToLower().StartsWith("http://") || f.ToLower().StartsWith("https://")).WithMessage("Must start with http:// or https://");
         }
     }
 
     public class AddTagRequest
     {
         /// <summary>
-        /// The url to gitlab repo. Must start with http:// or https:// and end with .git. Like: http://example.com/app/app-client.git
+        /// The url to gitlab repo. Must start with http:// or https://. Like: http://example.com/app/app-client.git
         /// </summary>
         public string HttpUrlToRepo { get; set; }
 
@@ -55,8 +54,7 @@ namespace GitLab.Api.Extender.Models
         {
             RuleFor(p => p.HttpUrlToRepo)
                 .NotEmpty()
-                .Must(f => f.ToLower().StartsWith("http://") || f.ToLower().StartsWith("https://")).WithMessage("Must start with http:// or https://")
-                .Must(f => f.ToLower().EndsWith(".git")).WithMessage("Must end with .git");
+                .Must(f => f.ToLower().StartsWith("http://") || f.ToLower().StartsWith("https://")).WithMessage("Must start with http:// or https://");
 
             RuleFor(p => p.Ref).NotEmpty();
             RuleFor(p => p.TagName).NotEmpty();

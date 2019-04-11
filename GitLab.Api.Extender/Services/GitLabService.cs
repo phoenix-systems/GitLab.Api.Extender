@@ -40,7 +40,7 @@ namespace GitLab.Api.Extender.Services
                     return null;
                 }
 
-                var project = projects.FirstOrDefault(f => f.http_url_to_repo.ToLower() == httpUrlToRepo.ToLower());
+                var project = projects.FirstOrDefault(f => f.http_url_to_repo.StartsWith(httpUrlToRepo, StringComparison.CurrentCultureIgnoreCase));
                 if (project != null)
                 {
                     return project.id;
