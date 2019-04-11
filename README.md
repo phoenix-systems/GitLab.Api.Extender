@@ -11,7 +11,7 @@ You can quickly run a container with a pre-built [docker image](https://hub.dock
 ```
 - App__Access__Key:  Key to secure api endpoints
 - App__GitLab__Url: Url to gitlab api, like: https://example.com/api
-- App__GitLab__Token: Token that have access to gitlab projects
+- App__GitLab__Token: Token that has access to gitlab projects
 ```
 
 2. Start docker-compose
