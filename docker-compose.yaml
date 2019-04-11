@@ -7,5 +7,5 @@ services:
       - 80
     environment:
       - "App__Access__Key=<api-access-key>"
-      - "App__Log__Phoenix__Url=<gitlab-api-url>"
+      - "App__GitLab__Url=<gitlab-api-url>"
       - "App__GitLab__Token=<gitlab-token>"
