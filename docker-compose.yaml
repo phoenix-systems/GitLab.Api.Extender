@@ -1,0 +1,11 @@
+version: '3'
+services:
+  gitlab-api-extender:
+    image: {Registry.Path}/gitlab/gitlab-api-extender:latest
+    restart: unless-stopped
+    ports:
+      - 80
+    environment:
+      - "App__Access__Key=<api-access-key>"
+      - "App__Log__Phoenix__Url=<gitlab-api-url>"
+      - "App__GitLab__Token=<gitlab-token>"
