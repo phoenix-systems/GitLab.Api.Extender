@@ -5,7 +5,7 @@ The main purpose of that api is to simplify CI/CD builds that have to be access 
 All endpoints are documented in swagger. It must be available here: http://domain-or-ip:80/swagger/
 
 ## Run using pre-built docker image
-You can quickly run a container with a pre-built [Docker image](https://hub.docker.com/r/phoenixsystemsag/gitlab-api-extender) using [docker-compose.yaml](https://github.com/phoenix-systems/GitLab.Api.Extender/blob/master/docker-compose.yaml).
+You can quickly run a container with a pre-built [docker image](https://hub.docker.com/r/phoenixsystemsag/gitlab-api-extender) using [docker-compose.yaml](https://github.com/phoenix-systems/GitLab.Api.Extender/blob/master/docker-compose.yaml).
 
 1. Update the following environment params in docker-compose.yaml
 ```
