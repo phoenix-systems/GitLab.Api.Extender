@@ -2,8 +2,8 @@
 The main purpose of that api is to simplify CI/CD builds that have to be access gitlab to add tags, etc... Current gitlab api requires to pass project id to most of the endpoinds and that forces to store it in builds parameters. Usually builds already have http link to gitlab repo (like http://git.example.com/app/app-client.git) as parameter and this api allows to access gitlab using repo link only.
 
 ## Features
-- Get Poject Id by http repository url
-- Add Tag by http repository url
+- Get project id by http repository url
+- Add tag by http repository url
 
 ## How to use
 All endpoints are documented in swagger. It must be available here: http://domain-or-ip:80/swagger/
