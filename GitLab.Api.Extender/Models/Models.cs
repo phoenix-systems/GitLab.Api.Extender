@@ -16,7 +16,7 @@ namespace GitLab.Api.Extender.Models
         {
             RuleFor(p => p.HttpUrlToRepo)
                 .NotEmpty()
-                .Must(f => f.ToLower().StartsWith("http://") || f.ToLower().StartsWith("https://")).WithMessage("Must start with http:// or https://");
+                .Must(f => f.ValidateUrl()).WithMessage("Must start with http:// or https://");
         }
     }
 
@@ -54,7 +54,7 @@ namespace GitLab.Api.Extender.Models
         {
             RuleFor(p => p.HttpUrlToRepo)
                 .NotEmpty()
-                .Must(f => f.ToLower().StartsWith("http://") || f.ToLower().StartsWith("https://")).WithMessage("Must start with http:// or https://");
+                .Must(f => f.ValidateUrl()).WithMessage("Must start with http:// or https://");
 
             RuleFor(p => p.Ref).NotEmpty();
             RuleFor(p => p.TagName).NotEmpty();
@@ -90,10 +90,23 @@ namespace GitLab.Api.Extender.Models
         {
             RuleFor(p => p.HttpUrlToRepo)
                 .NotEmpty()
-                .Must(f => f != null && (f.ToLower().StartsWith("http://") || f.ToLower().StartsWith("https://"))).WithMessage("Must start with http:// or https://");
+                .Must(f => f.ValidateUrl()).WithMessage("Must start with http:// or https://");
 
             RuleFor(p => p.Ref).NotEmpty();
             RuleFor(p => p.Path).NotEmpty();
+        }
+    }
+
+    static class ValidationsExtensions
+    {
+        public static bool ValidateUrl(this string value)
+        {
+            if (value != null)
+            {
+                return value.ToLower().StartsWith("http://") || value.ToLower().StartsWith("https://");
+            }
+
+            return true;
         }
     }
 }
