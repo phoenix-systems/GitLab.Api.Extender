@@ -90,7 +90,7 @@ namespace GitLab.Api.Extender.Models
         {
             RuleFor(p => p.HttpUrlToRepo)
                 .NotEmpty()
-                .Must(f => f.ToLower().StartsWith("http://") || f.ToLower().StartsWith("https://")).WithMessage("Must start with http:// or https://");
+                .Must(f => f != null && (f.ToLower().StartsWith("http://") || f.ToLower().StartsWith("https://"))).WithMessage("Must start with http:// or https://");
 
             RuleFor(p => p.Ref).NotEmpty();
             RuleFor(p => p.Path).NotEmpty();
