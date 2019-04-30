@@ -36,6 +36,7 @@ namespace GitLab.Api.Extender
             var settings = Configuration.Get<Settings>();
 
             services
+                .AddMemoryCache()
                 .AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddJsonOptions(options =>
                 {

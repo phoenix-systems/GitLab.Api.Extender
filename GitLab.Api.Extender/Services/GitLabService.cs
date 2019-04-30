@@ -1,17 +1,20 @@
 ﻿using GitLab.Api.Extender.Helpers;
+using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace GitLab.Api.Extender.Services
 {
     public class GitLabService : IGitLabService
     {
         private readonly GitLabSettings _settings;
+        private readonly IMemoryCache _memoryCache;
 
-        public GitLabService(GitLabSettings settings)
+        public GitLabService(GitLabSettings settings, IMemoryCache memoryCache)
         {
             _settings = settings ?? throw new ArgumentException($"App__GitLab__Url and App__GitLab__Token must be set");
             if (string.IsNullOrEmpty(_settings.Url))
@@ -24,9 +27,24 @@ namespace GitLab.Api.Extender.Services
             }
 
             _settings.Url = _settings.Url.TrimEnd('/');
+            _memoryCache = memoryCache;
         }
 
         public async Task<int?> GetProjectId(string httpUrlToRepo)
+        {
+            if (!_memoryCache.TryGetValue(httpUrlToRepo, out int? projectId))
+            {
+                projectId = await GetProjectIdInternal(httpUrlToRepo);
+                if (projectId != null)
+                {
+                    _memoryCache.Set(httpUrlToRepo, projectId, TimeSpan.FromDays(1));
+                }
+            }
+
+            return projectId;
+        }
+
+        private async Task<int?> GetProjectIdInternal(string httpUrlToRepo)
         {
             var page = 1;
             var url = $"{_settings.Url}/v4/projects";
@@ -80,7 +98,7 @@ namespace GitLab.Api.Extender.Services
                 throw new Exception($"Project id was not found for {httpUrlToRepo}");
             }
 
-            var url = $"{_settings.Url}/v4/projects/{projectId}/repository/files/{path}/raw?ref={refName}";
+            var url = $"{_settings.Url}/v4/projects/{projectId}/repository/files/{HttpUtility.UrlEncode(path)}/raw?ref={refName}";
             var headers = new { PRIVATE_TOKEN = _settings.Token };
 
             return await FlurlHelper.GetFileStream(url, headers);
