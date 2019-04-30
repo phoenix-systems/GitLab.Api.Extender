@@ -3,6 +3,7 @@ The main purpose of that api is to simplify CI/CD builds that have to be access 
 
 ## Features
 - Get project id by http repository url
+- Get raw file by http repository url and path
 - Add tag by http repository url
 
 ## How to use

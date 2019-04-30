@@ -64,5 +64,36 @@ namespace GitLab.Api.Extender.Models
     public class GetProjectIdResponse
     {
         public int Id { get; set; }
-    }   
+    }
+
+    public class GetFileRequest
+    {
+        /// <summary>
+        /// The url to gitlab repo. Must start with http:// or https://. Like: http://example.com/app/app-client.git
+        /// </summary>
+        public string HttpUrlToRepo { get; set; }
+
+        /// <summary>
+        /// Branch name, another tag name or commit SHA. Like: "master", "refs/heads/master", ...
+        /// </summary>
+        public string Ref { get; set; }
+
+        /// <summary>
+        /// The path to file. Like: app/docker-compose.yaml
+        /// </summary>
+        public string Path { get; set; }
+    }
+
+    public class GetFileRequestValidator : AbstractValidator<GetFileRequest>
+    {
+        public GetFileRequestValidator()
+        {
+            RuleFor(p => p.HttpUrlToRepo)
+                .NotEmpty()
+                .Must(f => f.ToLower().StartsWith("http://") || f.ToLower().StartsWith("https://")).WithMessage("Must start with http:// or https://");
+
+            RuleFor(p => p.Ref).NotEmpty();
+            RuleFor(p => p.Path).NotEmpty();
+        }
+    }
 }

@@ -4,6 +4,7 @@ using System;
 using GitLab.Api.Extender.Models;
 using GitLab.Api.Extender.Infrastructure;
 using GitLab.Api.Extender.Services;
+using GitLab.Api.Extender.Helpers;
 
 namespace GitLab.Api.Extender.Controllers
 {
@@ -13,10 +14,13 @@ namespace GitLab.Api.Extender.Controllers
     public class ProjectsController : Controller
     {
         private readonly IGitLabService _gitLabService;
+        private readonly IMimeMappingService _mimeMappingService;
 
-        public ProjectsController(IGitLabService gitLabService)
+        public ProjectsController(IGitLabService gitLabService,
+            IMimeMappingService mimeMappingService)
         {
             _gitLabService = gitLabService;
+            _mimeMappingService = mimeMappingService;
         }
 
         /// <summary>
@@ -45,6 +49,21 @@ namespace GitLab.Api.Extender.Controllers
         public async Task Add([FromBody] AddTagRequest request)
         {
             await _gitLabService.AddTag(request.HttpUrlToRepo, request.Ref, request.TagName, request.Message, request.ReleaseDescription);
+        }
+
+        /// <summary>
+        /// Get raw file from repo
+        /// </summary>
+        /// <returns>200 http code on success, otherwise 500 error</returns>
+        [AccessKey]
+        [HttpGet("repository/files/raw")]
+        public async Task<FileStreamResult> GetFile([FromQuery] GetFileRequest request)
+        {
+            var stream = await _gitLabService.GetFileStream(request.HttpUrlToRepo, request.Ref, request.Path);
+            var fileName = UriHelper.GetFileNameFromUrl(request.Path);
+            var contentType = _mimeMappingService.Map(fileName);
+
+            return new FileStreamResult(stream, contentType);
         }
     }
 }

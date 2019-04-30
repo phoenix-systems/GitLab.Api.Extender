@@ -88,6 +88,10 @@ namespace GitLab.Api.Extender
                 .WithParameter(TypedParameter.From(settings.App.Gitlab))
                 .SingleInstance();
 
+            builder.RegisterType<MimeMappingService>()
+                .As<IMimeMappingService>()
+                .SingleInstance();            
+
             builder.Populate(services);
 
             return builder.Build();

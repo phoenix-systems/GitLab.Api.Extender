@@ -1,6 +1,7 @@
 ﻿using GitLab.Api.Extender.Helpers;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -69,6 +70,20 @@ namespace GitLab.Api.Extender.Services
             };
 
             await FlurlHelper.PostJsonAsync(url, data, headers);
+        }
+
+        public async Task<Stream> GetFileStream(string httpUrlToRepo, string refName, string path)
+        {
+            var projectId = await GetProjectId(httpUrlToRepo);
+            if (!projectId.HasValue)
+            {
+                throw new Exception($"Project id was not found for {httpUrlToRepo}");
+            }
+
+            var url = $"{_settings.Url}/v4/projects/{projectId}/repository/files/{path}/raw?ref={refName}";
+            var headers = new { PRIVATE_TOKEN = _settings.Token };
+
+            return await FlurlHelper.GetFileStream(url, headers);
         }
 
         private class Project
