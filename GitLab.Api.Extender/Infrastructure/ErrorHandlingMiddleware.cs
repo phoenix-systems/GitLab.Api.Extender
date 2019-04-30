@@ -30,6 +30,8 @@ namespace GitLab.Api.Extender.Infrastructure
 
         private Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
+            Console.WriteLine(exception.ToString());
+
             var code = HttpStatusCode.InternalServerError;
             var error = new
             {
