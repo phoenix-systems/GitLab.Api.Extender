@@ -32,13 +32,21 @@ namespace GitLab.Api.Extender.Services
 
         public async Task<int?> GetProjectId(string httpUrlToRepo)
         {
-            if (!_memoryCache.TryGetValue(httpUrlToRepo, out int? projectId))
+            _memoryCache.TryGetValue(httpUrlToRepo, out int? projectId);
+
+            if (projectId.HasValue)
             {
-                projectId = await GetProjectIdInternal(httpUrlToRepo);
-                if (projectId != null)
+                var project = await GetProject(projectId);
+                if (project != null && project.http_url_to_repo.Equals(httpUrlToRepo, StringComparison.CurrentCultureIgnoreCase))
                 {
-                    _memoryCache.Set(httpUrlToRepo, projectId, TimeSpan.FromDays(1));
+                    return projectId;
                 }
+            }
+
+            projectId = await GetProjectIdInternal(httpUrlToRepo);
+            if (projectId.HasValue)
+            {
+                _memoryCache.Set(httpUrlToRepo, projectId);
             }
 
             return projectId;
@@ -67,6 +75,29 @@ namespace GitLab.Api.Extender.Services
 
                 page++;
             }
+        }
+
+        private async Task<Project> GetProject(int? projectId)
+        {
+            if (!projectId.HasValue)
+            {
+                return null;
+            }
+
+            var url = $"{_settings.Url}/v4/projects/{projectId}";
+            var headers = new { PRIVATE_TOKEN = _settings.Token };
+            var data = new { simple = true };
+
+            try
+            {
+                return await FlurlHelper.GetJsonAsync<Project>(url, data, headers);
+            }
+            catch
+            {
+                Console.WriteLine($"{url} not found");
+            }
+
+            return null;
         }
 
         public async Task AddTag(string httpUrlToRepo, string refName, string tagName, string message, string releaseDescription)
