@@ -56,8 +56,8 @@ namespace GitLab.Api.Extender.Controllers
         /// </summary>
         /// <returns>200 http code on success, otherwise 500 error</returns>
         [AccessKey]
-        [HttpGet("repository/files/raw")]
-        public async Task<FileStreamResult> GetFile([FromQuery] GetFileRequest request)
+        [HttpPost("repository/files/raw")]
+        public async Task<FileStreamResult> GetFile([FromBody] GetFileRequest request)
         {
             var stream = await _gitLabService.GetFileStream(request.HttpUrlToRepo, request.Ref, request.Path);
             var fileName = UriHelper.GetFileNameFromUrl(request.Path);
